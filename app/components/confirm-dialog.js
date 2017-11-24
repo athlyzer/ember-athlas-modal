@@ -1,0 +1,1 @@
+export { default } from 'ember-spin-modal/components/confirm-dialog';

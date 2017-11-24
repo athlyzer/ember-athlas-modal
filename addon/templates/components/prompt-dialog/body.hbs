@@ -1,0 +1,12 @@
+{{#if dialog.showError}}
+<div class="alert alert-danger" role="alert">
+	<strong>{{dialog.errorLabel}}</strong> {{dialog.errorMessage}}!
+</div>
+{{/if}}
+
+<div class="form-group">
+	<label for={{concat dialog.elementId '-input'}}>{{dialog.message}}</label>
+	{{input value=dialog.value class="form-control" id=(concat dialog.elementId '-input')}}
+</div>
+
+

@@ -1,0 +1,126 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+	<a class="navbar-brand" href="#">{{concat '{{ember-spin-modal}}'}}</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="collapse navbar-collapse" id="navbarCollapse">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item active">
+				<a class="nav-link" href="#">Home
+				</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="#">Link</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link disabled" href="#">Disabled</a>
+			</li>
+		</ul>
+	</div>
+</nav>
+
+<main role="main" class="container">
+	{{outlet}}
+
+	<h2>Simple Modal</h2>
+	<button class="btn btn-primary" {{action (dialog '#diag-simple')}}>Open Modal</button>
+
+	{{#modal-dialog id="diag-simple" title="Dialog Title"}}
+		Content goes hier
+	{{/modal-dialog}}
+
+
+	<h2>Custom Modal</h2>
+	<button class="btn btn-primary" {{action (dialog '#diag-custom')}}>Open Modal</button>
+	{{#modal-dialog id="diag-custom" as |modal|}}
+		{{modal.header title="Dialog Heading" closeButton=false}}
+
+		{{#modal.body}}
+			Content goes hier
+		{{/modal.body}}
+
+		{{#modal.footer}}
+			I am the footer <button class="btn btn-primary" data-dismiss="modal">OK</button>
+		{{/modal.footer}}
+	{{/modal-dialog}}
+
+	<h2>Stacked Modal</h2>
+	<button class="btn btn-primary" {{action (dialog '#diag-stacked-outer')}}>Open Outer Modal</button>
+
+	{{#modal-dialog id="diag-stacked-outer" title="Outer Dialog"}}
+		Outer dialog ....
+
+		<button class="btn btn-primary" {{action (dialog '#diag-stacked-inner')}}>Open Inner Modal</button>
+
+		{{#modal-dialog id="diag-stacked-inner" size="sm" title="Inner Dialog"}}
+			Inner dialog
+		{{/modal-dialog}}
+	{{/modal-dialog}}
+
+	<h2>Alert Dialog</h2>
+	<button class="btn btn-success" {{action (dialog '#alert-dialog')}}>Open Alert Dialog</button>
+
+	{{#alert-dialog id="alert-dialog" title="Did you know..."}}
+		This stuff here is awesome?
+	{{/alert-dialog}}
+
+	<h2>Confirm Dialog</h2>
+	<button class="btn btn-success" {{action (dialog '#confirm-dialog')}}>Open Confirm Dialog</button>
+
+	{{#confirm-dialog id="confirm-dialog" title="Did you know..." okPressed=(action 'okPressed') cancelPressed=(action 'cancelPressed')}}
+		This stuff here is awesome?
+	{{/confirm-dialog}}
+
+	<h2>Form Dialog</h2>
+	<button class="btn btn-success" {{action (dialog '#form-dialog')}}>Open Form Dialog</button>
+
+	{{#form-dialog id="form-dialog" title="Enter your Details" success=(action 'submit') cancel=(action 'cancel')}}
+		<div class="form-row">
+			<div class="form-group col-md-6">
+				<label for="inputEmail4">Email</label>
+				<input type="email" class="form-control" id="inputEmail4" placeholder="Email">
+			</div>
+			<div class="form-group col-md-6">
+				<label for="inputPassword4">Password</label>
+				<input type="password" class="form-control" id="inputPassword4" placeholder="Password">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="inputAddress">Address</label>
+			<input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+		</div>
+		<div class="form-group">
+			<label for="inputAddress2">Address 2</label>
+			<input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor">
+		</div>
+		<div class="form-row">
+			<div class="form-group col-md-6">
+				<label for="inputCity">City</label>
+				<input type="text" class="form-control" id="inputCity">
+			</div>
+			<div class="form-group col-md-4">
+				<label for="inputState">State</label>
+				<select id="inputState" class="form-control">
+					<option selected>Choose...</option>
+					<option>...</option>
+				</select>
+			</div>
+			<div class="form-group col-md-2">
+				<label for="inputZip">Zip</label>
+				<input type="text" class="form-control" id="inputZip">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="form-check">
+				<label class="form-check-label">
+					<input class="form-check-input" type="checkbox"> Check me out
+				</label>
+			</div>
+		</div>
+	{{/form-dialog}}
+
+	<h2>Prompt Dialog</h2>
+	<button class="btn btn-success" {{action (dialog '#prompt-dialog')}}>Open Prompt Dialog</button>
+
+	{{prompt-dialog id="prompt-dialog" title="Prompt It" message="Your name?" success=(action 'prompted') cancel=(action 'cancel')}}
+</main>

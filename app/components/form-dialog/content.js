@@ -1,0 +1,1 @@
+export { default } from 'ember-spin-modal/components/form-dialog/content';

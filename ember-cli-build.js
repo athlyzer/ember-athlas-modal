@@ -2,10 +2,23 @@
 'use strict';
 
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
+const fastbootTransform = require('fastboot-transform');
 
 module.exports = function (defaults) {
 	let app = new EmberAddon(defaults, {
 		// Add options here
+		nodeAssets: {
+			'popper.js': {
+				srcDir: 'dist/umd',
+				import: {
+					include: ['popper.js'],
+					processTree(input) {
+						return fastbootTransform(input);
+					}
+				},
+				public: ['popper.js.map']
+			}
+		}
 	});
 
 	/*
@@ -16,6 +29,11 @@ module.exports = function (defaults) {
 	*/
 
 	app.import('node_modules/bootstrap/dist/css/bootstrap.css');
+	// app.import('node_modules/popper.js/dist/umd/popper.js', {
+	// 	using: [
+	// 		{ transformation: 'amd', as: 'Popper' }
+	// 	]
+	// });
 
 	return app.toTree();
 };

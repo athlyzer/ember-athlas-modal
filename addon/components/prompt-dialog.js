@@ -1,17 +1,17 @@
 import { isBlank } from '@ember/utils';
+import { oneWay } from '@ember/object/computed';
 import FormDialog from './form-dialog';
 
 export default FormDialog.extend({
 	bodyComponent: 'prompt-dialog/body',
 
-	size: 'sm',
-	okLabel: 'Ok',
+	okLabel: oneWay('athlas.formOkLabel'),
+	okClass: oneWay('athlas.formOkClass'),
+
 	message: '',
 
-	allowEmpty: false,
-	errorLabel: 'Error',
-	errorMessage: 'Give some input',
-	showError: false,
+	required: true,
+	errorMessage: oneWay('athlas.promptErrorMessage'),
 
 	didInsertElement() {
 		this._super(...arguments);

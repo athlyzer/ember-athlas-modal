@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed } from '@ember/object';
+import { set, computed } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import Evented from '@ember/object/evented';
 import layout from '../templates/components/modal-dialog';
@@ -30,30 +30,27 @@ export default Component.extend(Evented, {
 	ariaRole: 'dialog',
 	tabindex: '-1',
 	role: 'dialog',
-	titleId: computed('elementId', function () {
-		return this.get('elementId') + '-title';
-	}),
 
 	closeButton: true,
 	visible: false,
 
 	title: null,
-
-	simple: true,
-	simpleScheduled: false,
-
 	size: null,
-	sizeClass: computed('size', function () {
-		let size = this.get('size');
-		return isBlank(size) ? null : `modal-${size}`;
-	}),
 
 	contentComponent: 'modal-dialog/content',
 	headerComponent: 'modal-dialog/header',
 	bodyComponent: 'modal-dialog/body',
 	footerComponent: 'modal-dialog/footer',
 
-	buttons: [],
+	sizeClass: computed('size', function () {
+		let size = this.get('size');
+		return isBlank(size) ? null : `modal-${size}`;
+	}),
+
+	titleId: computed('elementId', function () {
+		return this.get('elementId') + '-title';
+	}),
+
 	buttonsSupervised: computed('buttons', function () {
 		let buttons = [];
 		this.get('buttons').forEach(button => {
@@ -65,7 +62,7 @@ export default Component.extend(Evented, {
 				button.dismiss = true;
 			}
 
-			button.disabled = button.hasOwnProperty('enabled') ? !button.enabled : false;
+			set(button, 'disabled', button.hasOwnProperty('enabled') ? !button.enabled : false);
 
 			buttons.push(button);
 		});
@@ -75,6 +72,10 @@ export default Component.extend(Evented, {
 
 	init() {
 		this._super(...arguments);
+
+		if (this.get('buttons') === undefined) {
+			this.set('buttons', []);
+		}
 
 		this.on('buttonPressed', (btn) => {
 			if (btn.dismiss) {
@@ -178,6 +179,7 @@ export default Component.extend(Evented, {
 		element.removeAttribute('aria-hidden');
 		document.body.classList.add(ClassName.OPEN);
 		this.showBackdrop();
+
 
 		this.addStack();
 

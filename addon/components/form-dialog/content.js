@@ -1,5 +1,7 @@
-import ModalDialogContent from '../modal-dialog/content';
+import ModalDialogContent from 'ember-athlas-modal/components/modal-dialog/content';
 
 export default ModalDialogContent.extend({
-	tagName: 'form'
+	tagName: 'form',
+	attributeBindings: ['novalidate'],
+	novalidate: true
 });

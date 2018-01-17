@@ -1,15 +1,30 @@
-import { computed } from '@ember/object';
 import ModalDialog from './modal-dialog';
+import { set, observer } from '@ember/object';
+import { oneWay } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
 
 export default ModalDialog.extend({
-	cancelClass: 'btn-secondary',
-	cancelLabel: 'Cancel',
+	athlas: service('athlas-modal'),
 
-	okClass: 'btn-primary',
-	okLabel: 'Ok',
+	okLabel: oneWay('athlas.confirmOkLabel'),
+	okClass: oneWay('athlas.confirmOkClass'),
 
-	buttons: computed(function () {
-		return [
+	cancelLabel: oneWay('athlas.cancelLabel'),
+	cancelClass: oneWay('athlas.cancelClass'),
+
+	buttonObserver: observer('okLabel', 'okClass', 'cancelLabel', 'cancelClass', function () {
+		let buttons = this.get('buttons').slice();
+		set(buttons[0], 'label', this.get('cancelLabel'));
+		set(buttons[0], 'class', this.get('cancelClass'));
+		set(buttons[1], 'label', this.get('okLabel'));
+		set(buttons[1], 'class', this.get('okClass'));
+		this.set('buttons', buttons);
+	}),
+
+	init() {
+		this._super(...arguments);
+
+		this.set('buttons', [
 			{
 				class: this.get('cancelClass'),
 				label: this.get('cancelLabel')
@@ -18,11 +33,7 @@ export default ModalDialog.extend({
 				class: this.get('okClass'),
 				label: this.get('okLabel')
 			}
-		];
-	}),
-
-	init() {
-		this._super(...arguments);
+		]);
 
 		this.on('buttonPressed', btn => {
 			if (btn.type === 'submit') {

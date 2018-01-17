@@ -1,1 +1,1 @@
-export { default, dialog } from 'ember-spin-modal/helpers/dialog';
+export { default, dialog } from 'ember-athlas-modal/helpers/dialog';

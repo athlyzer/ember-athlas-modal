@@ -1,1 +1,1 @@
-export { default } from 'ember-spin-modal/components/alert-dialog';
+export { default } from 'ember-athlas-modal/components/alert-dialog';

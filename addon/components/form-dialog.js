@@ -1,21 +1,26 @@
 import { set, observer } from '@ember/object';
+import { oneWay } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
 import ConfirmDialog from './confirm-dialog';
 
 export default ConfirmDialog.extend({
-	contentComponent: 'form-dialog/content',
+	athlas: service('athlas-modal'),
 
-	okClass: 'btn-success',
-	okLabel: 'Save',
+	contentComponent: 'form-dialog/content',
 
 	canSubmit: true,
 	hasSuccess: false,
-	validate: null,
+	isValidated: false,
+
+	okLabel: oneWay('athlas.formOkLabel'),
+	okClass: oneWay('athlas.formOkClass'),
 
 	init() {
 		this._super(...arguments);
 
 		// set 'submit' button to not dismissable
 		let buttons = this.get('buttons');
+		set(buttons[1], 'enabled', this.get('canSubmit'));
 		buttons.forEach((btn) => {
 			if ((btn.type && btn.type === 'submit')) {
 				btn.dismiss = false;
@@ -24,10 +29,10 @@ export default ConfirmDialog.extend({
 		this.set('buttons', buttons);
 
 		this.on('okPressed', () => {
-			if (this.canValidate()) {
-				if (this.isValid()) {
-					this.triggerSuccess();
-				}
+			const form = document.getElementById(`${this.get('elementId')}-content`);
+			if (form.checkValidity() === false || this.checkValidity() === false) {
+				form.classList.add('was-validated');
+				this.set('isValidated', true);
 			} else {
 				this.triggerSuccess();
 			}
@@ -40,6 +45,9 @@ export default ConfirmDialog.extend({
 
 		this.on('opened', () => {
 			this.set('hasSuccess', false);
+			this.set('isValidated', false);
+			const form = document.getElementById(`${this.get('elementId')}-content`);
+			form.classList.remove('was-validated');
 		});
 
 		this.on('closed', () => {
@@ -49,26 +57,18 @@ export default ConfirmDialog.extend({
 		});
 	},
 
-	didReceiveAttrs() {
-		this._super(...arguments);
-
-		let buttons = this.get('buttons');
-		set(buttons[1], 'enabled', this.get('canSubmit'));
-		this.set('buttons', buttons);
-	},
-
 	canSubmitObserver: observer('canSubmit', function () {
-		let buttons = this.get('buttons');
+		let buttons = this.get('buttons').slice();
 		set(buttons[1], 'enabled', this.get('canSubmit'));
 		this.set('buttons', buttons);
 	}),
 
 	canValidate() {
-		return this.validate || this.get('validate');
+		return typeof this.validate === 'function' || this.get('validate');
 	},
 
-	isValid() {
-		if (this.validate) {
+	checkValidity() {
+		if (typeof this.validate === 'function') {
 			return this.validate();
 		}
 

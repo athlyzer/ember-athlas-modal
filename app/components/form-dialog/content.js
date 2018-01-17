@@ -1,1 +1,1 @@
-export { default } from 'ember-spin-modal/components/form-dialog/content';
+export { default } from 'ember-athlas-modal/components/form-dialog/content';

@@ -1,1 +1,1 @@
-export { default } from 'ember-spin-modal/components/confirm-dialog';
+export { default } from 'ember-athlas-modal/components/confirm-dialog';

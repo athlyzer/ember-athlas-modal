@@ -161,14 +161,15 @@ export default Component.extend(Evented, {
 		const element = this.get('element');
 		const content = element.querySelector('.modal-content');
 
-		element.querySelectorAll(Selector.DATA_DISMISS).forEach(elem => {
+		const elems = element.querySelectorAll(Selector.DATA_DISMISS);
+		for (let elem of elems) {
 			elem.addEventListener('click', () => {
 				this.close();
 			}, { once: true });
-		});
+		}
 
 		element.addEventListener('click', (e) => {
-			if (!e.path.includes(content)) {
+			if (e.path && typeof(e.path.includes) === 'function' && !e.path.includes(content)) {
 				this.close();
 			}
 		});
